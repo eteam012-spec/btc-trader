@@ -3,132 +3,100 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>BTC Command Console V1</title>
+<title>BTC Command Console V2</title>
 <style>
-:root{--bg:#11100e;--panel:#1a1916;--line:#4b4538;--text:#e8e0cf;--muted:#9d9585;--green:#76d69b;--red:#e77972;--amber:#e7b96b;--cyan:#7bcbd1}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% 0,#29261e,#0d0d0c 65%);color:var(--text);font:14px/1.35 ui-monospace,SFMono-Regular,Menlo,monospace}
-.wrap{max-width:1400px;margin:auto;padding:18px}.top{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}.brand{letter-spacing:.12em;font-weight:800}.status{display:flex;gap:8px;flex-wrap:wrap}.pill{padding:6px 9px;border:1px solid var(--line);border-radius:999px}.live{color:var(--green)}.danger{color:var(--red)}.warn{color:var(--amber)}
-.grid{display:grid;grid-template-columns:1.7fr 1fr;gap:12px;margin-top:12px}.panel{background:linear-gradient(145deg,#211f1a,#151411);border:1px solid var(--line);border-radius:10px;padding:14px;box-shadow:inset 0 0 25px #0006}.title{font-size:12px;color:var(--muted);letter-spacing:.12em;margin-bottom:10px}.big{font-size:38px;font-weight:800}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.metric{background:#0f0f0d;border:1px solid #363228;border-radius:8px;padding:10px}.metric b{display:block;font-size:20px;margin-top:5px}.signal{display:grid;grid-template-columns:1fr 1fr;gap:10px}.sig{padding:14px;border:1px solid var(--line);border-radius:8px;background:#10100e}.sig strong{font-size:23px}.green{color:var(--green)}.red{color:var(--red)}.amber{color:var(--amber)}.controls{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.controls label{color:var(--muted);font-size:12px}.controls input{width:100%;margin-top:4px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}button,input{font:inherit;color:inherit;background:#121210;border:1px solid var(--line);border-radius:6px;padding:10px}button{cursor:pointer;min-height:42px}.primary{background:#29251d}.stop{border-color:#9b5049;color:#ffaaa2}.log{height:260px;overflow:auto;background:#0c0c0b;border:1px solid #363228;border-radius:7px;padding:8px}.row{padding:5px 0;border-bottom:1px solid #24221e}.wide{grid-column:1/-1}.footer{margin-top:12px;color:var(--muted);font-size:11px}@media(max-width:850px){.grid{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,1fr)}}@media(max-width:500px){.controls,.signal{grid-template-columns:1fr}.big{font-size:30px}}
+:root{--bg:#090b0a;--panel:#151916;--panel2:#0e120f;--line:#384039;--text:#e9ece3;--muted:#8d968c;--green:#72d49a;--red:#e56f68;--amber:#e3b65f;--cyan:#73c9d0}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% 0,#263029,#080a09 68%);color:var(--text);font:14px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace}.wrap{max-width:1500px;margin:auto;padding:16px}.top{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}.brand{font-weight:900;letter-spacing:.1em}.status{display:flex;gap:7px;flex-wrap:wrap}.pill{border:1px solid var(--line);border-radius:999px;padding:5px 9px}.live{color:var(--green)}.warn{color:var(--amber)}.danger{color:var(--red)}.grid{display:grid;grid-template-columns:1.55fr 1fr;gap:10px;margin-top:10px}.panel{background:linear-gradient(145deg,#1a1e1b,#101311);border:1px solid var(--line);border-radius:10px;padding:13px;box-shadow:inset 0 0 28px #0008}.wide{grid-column:1/-1}.title{font-size:11px;color:var(--muted);letter-spacing:.14em;margin-bottom:8px}.big{font-size:42px;font-weight:900}.metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-top:11px}.metric{background:#0b0e0c;border:1px solid #2d332e;border-radius:7px;padding:9px}.metric b{display:block;font-size:18px;margin-top:4px}.signal{display:grid;grid-template-columns:1fr 1.7fr;gap:8px}.sig{background:#0b0e0c;border:1px solid var(--line);border-radius:7px;padding:12px;min-height:62px}.sig strong{font-size:22px}.green{color:var(--green)}.red{color:var(--red)}.amber{color:var(--amber)}.cyan{color:var(--cyan)}.controls{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}.controls label{font-size:11px;color:var(--muted)}input,button{width:100%;margin-top:4px;background:#0d100e;color:var(--text);border:1px solid var(--line);border-radius:6px;padding:9px;font:inherit}button{cursor:pointer;min-height:42px}.actions{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}.stop{border-color:#9b5049;color:#ffaaa2}.primary{background:#252b26}.bars{height:150px;display:flex;align-items:end;gap:5px;padding:10px 10px 24px;background:#0b0e0c;border:1px solid #2c322d;border-radius:7px}.barWrap{height:100%;flex:1;display:flex;align-items:end;position:relative}.bar{width:100%;min-height:2px;border-radius:2px 2px 0 0;background:var(--green)}.bar.neg{background:var(--red)}.bar.flat{background:#707770}.barLabel{position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);font-size:9px;color:var(--muted)}.log{height:230px;overflow:auto;background:#090b0a;border:1px solid #2c322d;border-radius:7px;padding:8px}.row{padding:5px 0;border-bottom:1px solid #20251f}.source{display:flex;gap:8px;flex-wrap:wrap;font-size:11px}.footer{margin-top:10px;color:var(--muted);font-size:10px}@media(max-width:900px){.grid{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(3,1fr)}.controls,.actions{grid-template-columns:repeat(2,1fr)}}@media(max-width:520px){.metrics{grid-template-columns:repeat(2,1fr)}.signal{grid-template-columns:1fr}.big{font-size:32px}}
 </style>
 </head>
 <body>
 <div class="wrap">
 <div class="top">
-<div class="brand">₿ BTC COMMAND CONSOLE // V1 PAPER CONTROL</div>
-<div class="status"><span class="pill" id="mode">MANUAL</span><span class="pill live">SIM FEED</span><span class="pill" id="clock">--:--:--</span></div>
+<div class="brand">₿ BTC COMMAND CONSOLE // V2 LIVE-DATA PAPER CONTROL</div>
+<div class="status"><span class="pill" id="mode">MANUAL</span><span class="pill live" id="feedStatus">FEED CHECKING</span><span class="pill" id="clock">--:--:--</span></div>
 </div>
-
 <div class="grid">
 <section class="panel">
-<div class="title">MARKET / 15-MINUTE WINDOW</div>
-<div class="big" id="btc">$0.00</div>
-<div>Target <span id="target">$0.00</span> · Distance <span id="dist">0.00%</span> · Minute <span id="minute">1/15</span></div>
-<div style="margin:12px 0;height:9px;background:#0d0d0c;border:1px solid #302d26;border-radius:4px"><div id="progress" style="height:100%;width:0;background:var(--green)"></div></div>
+<div class="title">LIVE MARKET / 15-MINUTE WINDOW</div>
+<div class="big" id="btc">$--</div>
+<div>Target <span id="target">$--</span> · Distance <span id="dist">--</span> · Minute <span id="minute">--/15</span></div>
+<div style="margin:11px 0;height:8px;background:#090b0a;border:1px solid #2b302c;border-radius:4px"><div id="progress" style="height:100%;width:0;background:var(--green)"></div></div>
 <div class="metrics">
 <div class="metric">BANKROLL<b id="bank">$28.00</b></div>
 <div class="metric">POSITION<b id="pos">$2.00</b></div>
-<div class="metric">RISK<b id="risk">LOW</b></div>
+<div class="metric">RISK<b id="risk">--</b></div>
 <div class="metric">P/L<b id="pnl">$0.00</b></div>
+<div class="metric">DRAWDOWN<b id="dd">$0.00</b></div>
 </div>
 </section>
-
 <section class="panel">
 <div class="title">CONTROL MODE</div>
-<div class="actions"><button class="primary" id="manualBtn">MANUAL MODE</button><button id="autoBtn">AUTO MODE</button><button class="stop" id="stopBtn">EMERGENCY STOP</button></div>
-<div class="title" style="margin-top:16px">SIMULATED EXECUTION</div>
-<div class="actions"><button id="upBtn">BUY / UP</button><button id="downBtn">BUY / DOWN</button><button id="exitBtn">SELL / EXIT</button><button id="newBtn">NEW WINDOW</button></div>
+<div class="actions"><button id="manualBtn">MANUAL MODE</button><button id="autoBtn">AUTO MODE</button><button id="stopBtn" class="stop">EMERGENCY STOP</button><button id="refreshBtn">REFRESH FEED</button><button id="newBtn">NEW WINDOW</button></div>
+<div class="title" style="margin-top:13px">PAPER EXECUTION</div>
+<div class="actions"><button id="upBtn">BUY / UP</button><button id="downBtn">BUY / DOWN</button><button id="exitBtn">SELL / EXIT</button><button id="placeBtn" class="primary">PLACE SIGNAL PICK</button><button id="resetBtn">RESET STATS</button></div>
 </section>
-
 <section class="panel">
 <div class="title">ENTRY TIMING SIGNAL</div>
-<div class="signal"><div class="sig"><strong id="entry">WAIT</strong></div><div class="sig" id="entryReason">Waiting for market evidence.</div></div>
+<div class="signal"><div class="sig"><strong id="entry">WAIT</strong></div><div class="sig" id="entryReason">Waiting for verified market evidence.</div></div>
 </section>
-
 <section class="panel">
 <div class="title">EXIT TIMING SIGNAL</div>
-<div class="signal"><div class="sig"><strong id="exit">HOLD</strong></div><div class="sig" id="exitReason">No active simulated position.</div></div>
+<div class="signal"><div class="sig"><strong id="exit">HOLD</strong></div><div class="sig" id="exitReason">No active paper position.</div></div>
 </section>
-
 <section class="panel wide">
-<div class="title">RISK ENGINE</div>
+<div class="title">15-MINUTE MOVEMENT</div>
+<div class="bars" id="bars"></div>
+</section>
+<section class="panel wide">
+<div class="title">RISK ENGINE / ACCOUNT CONTROLS</div>
 <div class="controls">
 <label>Bankroll<input id="bankIn" type="number" min="1" step=".01" value="28"></label>
 <label>Max exposure<input id="maxIn" type="number" min="0" step=".01" value="2"></label>
 <label>Position<input id="posIn" type="number" min="0" step=".01" value="2"></label>
+<label>Daily loss limit<input id="lossIn" type="number" min="0" step=".01" value="5"></label>
+<label>Max consecutive losses<input id="lossesIn" type="number" min="1" step="1" value="3"></label>
 </div>
-<div class="footer">Safety rules: no loss-chasing, no position increases after losses, emergency stop blocks execution, and AUTO is paper-only in V1.</div>
+<div class="source" style="margin-top:9px"><span id="coinbaseStatus">BTC: checking…</span><span id="kalshiStatus">Kalshi: checking…</span><span id="dataGate">DATA GATE: CHECKING</span></div>
 </section>
-
-<section class="panel wide">
+<section class="panel">
+<div class="title">SIGNAL ENGINE</div>
+<div class="signal"><div class="sig"><strong id="pick">NO TRADE</strong></div><div class="sig" id="pickReason">Waiting for verified BTC and Kalshi data.</div></div>
+</section>
+<section class="panel">
 <div class="title">CHATGPT-STYLE ASSIST FEED</div>
 <div class="log" id="log"></div>
 </section>
 </div>
-<div class="footer">V1 does not place real orders or click external websites. It is the control/risk prototype for testing before any live execution integration.</div>
+<div class="footer">V2 uses live public market data when available. Execution is PAPER ONLY. No real orders, browser clicks, or live-money trades are enabled. If feeds disagree, become stale, or cannot be verified, AUTO entries are blocked.</div>
 </div>
-
 <script>
 (()=> {
+"use strict";
 const $=id=>document.getElementById(id);
-let s={mode:"MANUAL",running:true,stopped:false,minute:1,btc:77400,target:77400,entry:null,side:null,bank:28,max:2,pos:2,pnl:0,last:77400};
-
-function log(msg,cls=""){const d=document.createElement("div");d.className="row "+cls;d.textContent=new Date().toLocaleTimeString()+"  "+msg;$("log").prepend(d)}
-function clamp(){s.max=Math.max(0,Math.min(s.bank,s.max));s.pos=Math.max(0,Math.min(s.max,s.pos))}
-function render(){
-$("mode").textContent=s.stopped?"STOPPED":s.mode;
-$("mode").className="pill "+(s.stopped?"danger":"");
-$("btc").textContent="$"+s.btc.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
-$("target").textContent="$"+s.target.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
-const dist=(s.btc/s.target-1)*100;
-$("dist").textContent=(dist>=0?"+":"")+dist.toFixed(3)+"%";
-$("minute").textContent=s.minute+"/15";
-$("progress").style.width=((s.minute-1)/14*100)+"%";
-$("bank").textContent="$"+s.bank.toFixed(2);$("pos").textContent="$"+s.pos.toFixed(2);
-$("pnl").textContent=(s.pnl>=0?"+$":"-$")+Math.abs(s.pnl).toFixed(2);
-$("risk").textContent=Math.abs(dist)<.08?"CRITICAL":Math.abs(dist)<.18?"HIGH":Math.abs(dist)<.35?"MODERATE":"LOW";
-let e=s.minute<4?"WAIT":Math.abs(dist)<.35?"GETTING READY":Math.abs(dist)<.18?"PLACE BET NOW":"LATE ENTRY";
-$("entry").textContent=e;
-$("entryReason").textContent=e==="WAIT"?"Collecting movement before entry.":e==="PLACE BET NOW"?"Price is near the reference; entry window is active.":"Signal considers distance and timing.";
-let ex="HOLD",er=s.side?"Watching the locked position.":"No active simulated position.";
-if(s.side){
-const adverse=s.side==="UP"?s.btc<s.entry:s.btc>s.entry;
-if(Math.abs(dist)<.15||adverse){ex=adverse&&Math.abs(dist)<.08?"EXIT NOW":"WATCH EXIT";er=adverse?"Movement is against the locked position.":"Price is close to the reference; protect capital."}
-}
-$("exit").textContent=ex;$("exitReason").textContent=er;
-}
-function place(side,who){
-if(s.stopped)return log("EXECUTION BLOCKED — EMERGENCY STOP","danger");
-clamp();if(s.pos<=0)return log("NO TRADE — position size is zero","warn");
-s.side=side;s.entry=s.btc;log(who+" SIM BUY "+side+" @ $"+s.btc.toFixed(2),"green");render()
-}
-function exit(){
-if(!s.side)return log("NO ACTIVE POSITION");
-const gain=s.pnl;s.bank+=gain;
-log("SIM SELL / EXIT — P/L "+(gain>=0?"+":"")+gain.toFixed(2),gain>=0?"green":"danger");
-s.side=null;s.entry=null;s.pnl=0;render()
-}
-function newWindow(){
-s.minute=1;s.btc=77400+(Math.random()-.5)*120;s.target=s.btc+(Math.random()-.5)*160;
-s.side=null;s.entry=null;s.pnl=0;s.stopped=false;s.running=true;log("NEW 15-MINUTE WINDOW");render()
-}
-$("manualBtn").onclick=()=>{s.mode="MANUAL";log("MANUAL MODE ENABLED");render()};
-$("autoBtn").onclick=()=>{if(s.stopped)return;s.mode="AUTO";log("AUTO MODE ENABLED — PAPER ONLY","warn");render()};
-$("stopBtn").onclick=()=>{s.stopped=true;s.running=false;s.mode="MANUAL";log("EMERGENCY STOP — ALL EXECUTION BLOCKED","danger");render()};
-$("upBtn").onclick=()=>place("UP","MANUAL");$("downBtn").onclick=()=>place("DOWN","MANUAL");$("exitBtn").onclick=exit;$("newBtn").onclick=newWindow;
-["bankIn","maxIn","posIn"].forEach(id=>$(id).oninput=()=>{s.bank=+$("bankIn").value||1;s.max=+$("maxIn").value||0;s.pos=+$("posIn").value||0;clamp();render()});
+const state={mode:"MANUAL",stopped:false,running:true,btc:null,target:null,kalshi:null,close:null,minute:1,side:null,entry:null,position:2,bank:28,max:2,lossLimit:5,maxLosses:3,dailyLoss:0,consecutiveLosses:0,pnl:0,history:[],lastBtc:null,lastUpdate:0,autoWindowId:0};
+const money=n=>Number.isFinite(n)?"$"+n.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}):"$--";
+const log=(m,c="")=>{const d=document.createElement("div");d.className="row "+c;d.textContent=new Date().toLocaleTimeString()+"  "+m;$("log").prepend(d)};
+const clamp=()=>{state.max=Math.max(0,Math.min(state.bank,state.max));state.position=Math.max(0,Math.min(state.max,state.position));state.lossLimit=Math.max(0,state.lossLimit);state.maxLosses=Math.max(1,Math.floor(state.maxLosses))};
+async function fetchJson(url,timeout=3000){const c=new AbortController();const t=setTimeout(()=>c.abort(),timeout);try{const r=await fetch(url,{cache:"no-store",signal:c.signal});if(!r.ok)throw new Error(String(r.status));return await r.json()}finally{clearTimeout(t)}}
+async function fetchBtc(){try{const j=await fetchJson("https://api.coinbase.com/v2/prices/BTC-USD/spot",2500);const p=Number(j&&j.data&&j.data.amount);if(!Number.isFinite(p))throw new Error("bad BTC");if(state.btc!==null&&state.lastBtc!==null)state.history.push({delta:(p-state.btc)/state.btc});state.lastBtc=state.btc;state.btc=p;$("coinbaseStatus").textContent="BTC: LIVE / Coinbase";$("coinbaseStatus").className="green";return true}catch(e){$("coinbaseStatus").textContent="BTC: UNVERIFIED";$("coinbaseStatus").className="danger";return false}}
+async function fetchKalshi(){try{const j=await fetchJson("https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBTC15M&status=open&limit=20",3000);const markets=(j&&j.markets||[]).filter(m=>m.status==="open"&&m.close_time);const now=Date.now();const m=markets.sort((a,b)=>new Date(a.close_time)-new Date(b.close_time)).find(x=>new Date(x.close_time).getTime()>now);if(!m)throw new Error("no active market");state.target=Number(m.floor_strike);state.close=new Date(m.close_time).getTime();const yes=Number(m.yes_ask_dollars??m.yes_ask??m.last_price_dollars);state.kalshi=Number.isFinite(yes)?yes:null;$("kalshiStatus").textContent="Kalshi: LIVE / "+(Number.isFinite(yes)?(yes*100).toFixed(0)+"¢ YES":"price n/a");$("kalshiStatus").className="green";return Number.isFinite(state.kalshi)}catch(e){$("kalshiStatus").textContent="Kalshi: UNVERIFIED";$("kalshiStatus").className="danger";return false}}
+function updateWindow(){if(!state.close)return;const rem=Math.max(0,state.close-Date.now());state.minute=Math.min(15,Math.max(1,16-Math.ceil(rem/60000)))}
+function signal(){if(!Number.isFinite(state.btc)||!Number.isFinite(state.target)||!Number.isFinite(state.kalshi))return {pick:"NO TRADE",entry:"WAIT",reason:"Waiting for verified BTC and Kalshi data."};if(state.dailyLoss>=state.lossLimit||state.consecutiveLosses>=state.maxLosses)return {pick:"NO TRADE",entry:"BLOCKED",reason:"Risk limit reached; AUTO entry is disabled."};const d=(state.btc/state.target-1)*100;const marketDir=state.kalshi>=0.5?"UP":"DOWN";const spotDir=state.btc>=state.target?"UP":"DOWN";if(marketDir!==spotDir)return {pick:"NO TRADE",entry:"WAIT",reason:"BTC and Kalshi direction disagree; no entry."};if(state.minute<=3)return {pick:spotDir,entry:"WAIT",reason:"Early window: collect more movement before committing capital."};if(Math.abs(d)<0.10)return {pick:spotDir,entry:"CAUTION",reason:"Very near target; flip risk is elevated."};if(Math.abs(d)<0.35)return {pick:spotDir,entry:"PLACE BET NOW",reason:"BTC and Kalshi agree and price is near the reference."};return {pick:spotDir,entry:"LATE ENTRY",reason:"Direction agrees but price is already extended from target."}}
+function renderBars(){const el=$("bars");el.innerHTML="";const h=state.history.slice(-15);for(let i=0;i<15;i++){const w=document.createElement("div");w.className="barWrap";if(h[i]){const b=document.createElement("div");b.className="bar "+(h[i].delta<0?"neg":Math.abs(h[i].delta)<0.00001?"flat":"");b.style.height=Math.min(100,Math.max(4,Math.abs(h[i].delta)*18000))+"%";w.appendChild(b)}const lab=document.createElement("span");lab.className="barLabel";lab.textContent="M"+(i+1);w.appendChild(lab);el.appendChild(w)}}
+function render(){const s=signal();$("mode").textContent=state.stopped?"STOPPED":state.mode;$("mode").className="pill "+(state.stopped?"danger":"");$("btc").textContent=money(state.btc);$("target").textContent=money(state.target);if(Number.isFinite(state.btc)&&Number.isFinite(state.target)){const d=(state.btc/state.target-1)*100;$("dist").textContent=(d>=0?"+":"")+d.toFixed(3)+"%";$("risk").textContent=Math.abs(d)<.08?"CRITICAL":Math.abs(d)<.18?"HIGH":Math.abs(d)<.35?"MODERATE":"LOW"}else{$("dist").textContent="--";$("risk").textContent="--"}$("minute").textContent=state.minute+"/15";$("progress").style.width=((Math.max(1,state.minute)-1)/14*100)+"%";$("bank").textContent=money(state.bank);$("pos").textContent=money(state.position);$("pnl").textContent=(state.pnl>=0?"+":"-")+money(Math.abs(state.pnl));$("dd").textContent=money(state.dailyLoss);$("entry").textContent=s.entry;$("entryReason").textContent=s.reason;$("pick").textContent=s.pick;$("pickReason").textContent=s.reason;let ex="HOLD",xr=state.side?"Watching the locked paper position.":"No active paper position.";if(state.side&&Number.isFinite(state.btc)&&Number.isFinite(state.entry)){const move=state.side==="UP"?(state.btc/state.entry-1)*100:(state.entry/state.btc-1)*100;if(move<-.10){ex="EXIT NOW";xr="Locked position is materially adverse; protect capital."}else if(move<0||Math.abs((state.btc/state.target-1)*100)<.15){ex="WATCH EXIT";xr="Position is deteriorating or price is near the reference."}}$("exit").textContent=ex;$("exitReason").textContent=xr;const verified=Number.isFinite(state.btc)&&Number.isFinite(state.target)&&Number.isFinite(state.kalshi);$("dataGate").textContent=verified?"DATA GATE: VERIFIED":"DATA GATE: BLOCKED";$("dataGate").className=verified?"green":"danger";$("feedStatus").textContent=verified?"LIVE FEED":"FEED BLOCKED";$("feedStatus").className="pill "+(verified?"live":"danger");renderBars()}
+function paperBuy(side,who){if(state.stopped)return log("EXECUTION BLOCKED — EMERGENCY STOP","danger");clamp();if(state.position<=0)return log("NO TRADE — position size is zero","warn");if(!Number.isFinite(state.btc))return log("NO TRADE — BTC price not verified","danger");if(state.side)return log("POSITION ALREADY LOCKED — no stacking","warn");state.side=side;state.entry=state.btc;log(who+" PAPER BUY "+side+" @ "+money(state.btc),"green");render()}
+function paperExit(){if(!state.side)return log("NO ACTIVE PAPER POSITION");const gain=state.pnl;state.bank+=gain;state.dailyLoss+=Math.max(0,-gain);if(gain<0)state.consecutiveLosses++;else if(gain>0)state.consecutiveLosses=0;log("PAPER EXIT "+(gain>=0?"+":"-")+money(Math.abs(gain)),gain>=0?"green":"danger");state.side=null;state.entry=null;state.pnl=0;clamp();render()}
+async function refresh(){const [b,k]=await Promise.all([fetchBtc(),fetchKalshi()]);updateWindow();state.lastUpdate=Date.now();if(state.side&&state.entry&&state.btc)state.pnl=(state.side==="UP"?(state.btc-state.entry)/state.entry:(state.entry-state.btc)/state.entry)*state.position;render();if(b&&k)log("LIVE DATA REFRESHED — risk engine updated","cyan")}
+function newWindow(){state.side=null;state.entry=null;state.pnl=0;state.close=null;state.target=null;state.kalshi=null;state.history=[];state.lastBtc=null;state.stopped=false;state.running=true;state.autoWindowId++;log("NEW 15-MINUTE WINDOW — refreshing live feeds");refresh()}
+function resetStats(){state.bank=Math.max(1,Number($("bankIn").value)||28);state.max=Math.max(0,Number($("maxIn").value)||0);state.position=Math.max(0,Number($("posIn").value)||0);state.lossLimit=Math.max(0,Number($("lossIn").value)||0);state.maxLosses=Math.max(1,Number($("lossesIn").value)||1);state.dailyLoss=0;state.consecutiveLosses=0;state.pnl=0;clamp();log("RISK STATS RESET");render()}
+$("manualBtn").onclick=()=>{state.mode="MANUAL";log("MANUAL MODE ENABLED");render()};
+$("autoBtn").onclick=()=>{if(state.stopped)return;state.mode="AUTO";log("AUTO MODE ENABLED — PAPER ONLY","warn");render()};
+$("stopBtn").onclick=()=>{state.stopped=true;state.running=false;state.mode="MANUAL";log("EMERGENCY STOP — ALL EXECUTION BLOCKED","danger");render()};
+$("refreshBtn").onclick=refresh;$("newBtn").onclick=newWindow;$("upBtn").onclick=()=>paperBuy("UP","MANUAL");$("downBtn").onclick=()=>paperBuy("DOWN","MANUAL");$("exitBtn").onclick=paperExit;$("placeBtn").onclick=()=>{const s=signal();if(s.pick==="UP"||s.pick==="DOWN")paperBuy(s.pick,"SIGNAL");else log("SIGNAL PICK BLOCKED — "+s.reason,"warn")};$("resetBtn").onclick=resetStats;
+[["bankIn","bank"],["maxIn","max"],["posIn","position"],["lossIn","lossLimit"],["lossesIn","maxLosses"]].forEach(([id,key])=>$(id).oninput=()=>{state[key]=Number($(id).value)||0;clamp();render()});
 setInterval(()=>{$("clock").textContent=new Date().toLocaleTimeString()},1000);
-setInterval(()=>{
-if(!s.running||s.stopped)return;
-s.last=s.btc;s.btc=Math.max(1000,s.btc+(Math.random()-.5)*45);
-if(s.side)s.pnl=(s.side==="UP"?s.btc-s.entry:s.entry-s.btc)/s.entry*s.pos;
-if(s.mode==="AUTO"&&!s.side&&s.minute>=4){
-const d=Math.abs(s.btc/s.target-1)*100;
-if(d>.18&&d<.55)place(s.btc>s.target?"UP":"DOWN","AUTO");
-}
-if(Math.random()<.08)s.minute=Math.min(15,s.minute+1);
-render();
-},1200);
-log("SYSTEM ONLINE — simulation/paper controller initialized");render();
+setInterval(async()=>{if(!state.running||state.stopped)return;await refresh();const s=signal();if(state.mode==="AUTO"&&!state.side&&(s.entry==="PLACE BET NOW")&&(s.pick==="UP"||s.pick==="DOWN"))paperBuy(s.pick,"AUTO")},2500);
+log("SYSTEM ONLINE — V2 live-data paper controller initialized");render();refresh();
 })();
 </script>
 </body>
