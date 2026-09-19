@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BTC Command Console V1</title>
+<style>
+:root{--bg:#11100e;--panel:#1a1916;--line:#4b4538;--text:#e8e0cf;--muted:#9d9585;--green:#76d69b;--red:#e77972;--amber:#e7b96b;--cyan:#7bcbd1}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% 0,#29261e,#0d0d0c 65%);color:var(--text);font:14px/1.35 ui-monospace,SFMono-Regular,Menlo,monospace}
+.wrap{max-width:1400px;margin:auto;padding:18px}.top{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}.brand{letter-spacing:.12em;font-weight:800}.status{display:flex;gap:8px;flex-wrap:wrap}.pill{padding:6px 9px;border:1px solid var(--line);border-radius:999px}.live{color:var(--green)}.danger{color:var(--red)}.warn{color:var(--amber)}
+.grid{display:grid;grid-template-columns:1.7fr 1fr;gap:12px;margin-top:12px}.panel{background:linear-gradient(145deg,#211f1a,#151411);border:1px solid var(--line);border-radius:10px;padding:14px;box-shadow:inset 0 0 25px #0006}.title{font-size:12px;color:var(--muted);letter-spacing:.12em;margin-bottom:10px}.big{font-size:38px;font-weight:800}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.metric{background:#0f0f0d;border:1px solid #363228;border-radius:8px;padding:10px}.metric b{display:block;font-size:20px;margin-top:5px}.signal{display:grid;grid-template-columns:1fr 1fr;gap:10px}.sig{padding:14px;border:1px solid var(--line);border-radius:8px;background:#10100e}.sig strong{font-size:23px}.green{color:var(--green)}.red{color:var(--red)}.amber{color:var(--amber)}.controls{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.controls label{color:var(--muted);font-size:12px}.controls input{width:100%;margin-top:4px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}button,input{font:inherit;color:inherit;background:#121210;border:1px solid var(--line);border-radius:6px;padding:10px}button{cursor:pointer;min-height:42px}.primary{background:#29251d}.stop{border-color:#9b5049;color:#ffaaa2}.log{height:260px;overflow:auto;background:#0c0c0b;border:1px solid #363228;border-radius:7px;padding:8px}.row{padding:5px 0;border-bottom:1px solid #24221e}.wide{grid-column:1/-1}.footer{margin-top:12px;color:var(--muted);font-size:11px}@media(max-width:850px){.grid{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,1fr)}}@media(max-width:500px){.controls,.signal{grid-template-columns:1fr}.big{font-size:30px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="top">
+<div class="brand">₿ BTC COMMAND CONSOLE // V1 PAPER CONTROL</div>
+<div class="status"><span class="pill" id="mode">MANUAL</span><span class="pill live">SIM FEED</span><span class="pill" id="clock">--:--:--</span></div>
+</div>
+
+<div class="grid">
+<section class="panel">
+<div class="title">MARKET / 15-MINUTE WINDOW</div>
+<div class="big" id="btc">$0.00</div>
+<div>Target <span id="target">$0.00</span> · Distance <span id="dist">0.00%</span> · Minute <span id="minute">1/15</span></div>
+<div style="margin:12px 0;height:9px;background:#0d0d0c;border:1px solid #302d26;border-radius:4px"><div id="progress" style="height:100%;width:0;background:var(--green)"></div></div>
+<div class="metrics">
+<div class="metric">BANKROLL<b id="bank">$28.00</b></div>
+<div class="metric">POSITION<b id="pos">$2.00</b></div>
+<div class="metric">RISK<b id="risk">LOW</b></div>
+<div class="metric">P/L<b id="pnl">$0.00</b></div>
+</div>
+</section>
+
+<section class="panel">
+<div class="title">CONTROL MODE</div>
+<div class="actions"><button class="primary" id="manualBtn">MANUAL MODE</button><button id="autoBtn">AUTO MODE</button><button class="stop" id="stopBtn">EMERGENCY STOP</button></div>
+<div class="title" style="margin-top:16px">SIMULATED EXECUTION</div>
+<div class="actions"><button id="upBtn">BUY / UP</button><button id="downBtn">BUY / DOWN</button><button id="exitBtn">SELL / EXIT</button><button id="newBtn">NEW WINDOW</button></div>
+</section>
+
+<section class="panel">
+<div class="title">ENTRY TIMING SIGNAL</div>
+<div class="signal"><div class="sig"><strong id="entry">WAIT</strong></div><div class="sig" id="entryReason">Waiting for market evidence.</div></div>
+</section>
+
+<section class="panel">
+<div class="title">EXIT TIMING SIGNAL</div>
+<div class="signal"><div class="sig"><strong id="exit">HOLD</strong></div><div class="sig" id="exitReason">No active simulated position.</div></div>
+</section>
+
+<section class="panel wide">
+<div class="title">RISK ENGINE</div>
+<div class="controls">
+<label>Bankroll<input id="bankIn" type="number" min="1" step=".01" value="28"></label>
+<label>Max exposure<input id="maxIn" type="number" min="0" step=".01" value="2"></label>
+<label>Position<input id="posIn" type="number" min="0" step=".01" value="2"></label>
+</div>
+<div class="footer">Safety rules: no loss-chasing, no position increases after losses, emergency stop blocks execution, and AUTO is paper-only in V1.</div>
+</section>
+
+<section class="panel wide">
+<div class="title">CHATGPT-STYLE ASSIST FEED</div>
+<div class="log" id="log"></div>
+</section>
+</div>
+<div class="footer">V1 does not place real orders or click external websites. It is the control/risk prototype for testing before any live execution integration.</div>
+</div>
+
+<script>
+(()=> {
+const $=id=>document.getElementById(id);
+let s={mode:"MANUAL",running:true,stopped:false,minute:1,btc:77400,target:77400,entry:null,side:null,bank:28,max:2,pos:2,pnl:0,last:77400};
+
+function log(msg,cls=""){const d=document.createElement("div");d.className="row "+cls;d.textContent=new Date().toLocaleTimeString()+"  "+msg;$("log").prepend(d)}
+function clamp(){s.max=Math.max(0,Math.min(s.bank,s.max));s.pos=Math.max(0,Math.min(s.max,s.pos))}
+function render(){
+$("mode").textContent=s.stopped?"STOPPED":s.mode;
+$("mode").className="pill "+(s.stopped?"danger":"");
+$("btc").textContent="$"+s.btc.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+$("target").textContent="$"+s.target.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+const dist=(s.btc/s.target-1)*100;
+$("dist").textContent=(dist>=0?"+":"")+dist.toFixed(3)+"%";
+$("minute").textContent=s.minute+"/15";
+$("progress").style.width=((s.minute-1)/14*100)+"%";
+$("bank").textContent="$"+s.bank.toFixed(2);$("pos").textContent="$"+s.pos.toFixed(2);
+$("pnl").textContent=(s.pnl>=0?"+$":"-$")+Math.abs(s.pnl).toFixed(2);
+$("risk").textContent=Math.abs(dist)<.08?"CRITICAL":Math.abs(dist)<.18?"HIGH":Math.abs(dist)<.35?"MODERATE":"LOW";
+let e=s.minute<4?"WAIT":Math.abs(dist)<.35?"GETTING READY":Math.abs(dist)<.18?"PLACE BET NOW":"LATE ENTRY";
+$("entry").textContent=e;
+$("entryReason").textContent=e==="WAIT"?"Collecting movement before entry.":e==="PLACE BET NOW"?"Price is near the reference; entry window is active.":"Signal considers distance and timing.";
+let ex="HOLD",er=s.side?"Watching the locked position.":"No active simulated position.";
+if(s.side){
+const adverse=s.side==="UP"?s.btc<s.entry:s.btc>s.entry;
+if(Math.abs(dist)<.15||adverse){ex=adverse&&Math.abs(dist)<.08?"EXIT NOW":"WATCH EXIT";er=adverse?"Movement is against the locked position.":"Price is close to the reference; protect capital."}
+}
+$("exit").textContent=ex;$("exitReason").textContent=er;
+}
+function place(side,who){
+if(s.stopped)return log("EXECUTION BLOCKED — EMERGENCY STOP","danger");
+clamp();if(s.pos<=0)return log("NO TRADE — position size is zero","warn");
+s.side=side;s.entry=s.btc;log(who+" SIM BUY "+side+" @ $"+s.btc.toFixed(2),"green");render()
+}
+function exit(){
+if(!s.side)return log("NO ACTIVE POSITION");
+const gain=s.pnl;s.bank+=gain;
+log("SIM SELL / EXIT — P/L "+(gain>=0?"+":"")+gain.toFixed(2),gain>=0?"green":"danger");
+s.side=null;s.entry=null;s.pnl=0;render()
+}
+function newWindow(){
+s.minute=1;s.btc=77400+(Math.random()-.5)*120;s.target=s.btc+(Math.random()-.5)*160;
+s.side=null;s.entry=null;s.pnl=0;s.stopped=false;s.running=true;log("NEW 15-MINUTE WINDOW");render()
+}
+$("manualBtn").onclick=()=>{s.mode="MANUAL";log("MANUAL MODE ENABLED");render()};
+$("autoBtn").onclick=()=>{if(s.stopped)return;s.mode="AUTO";log("AUTO MODE ENABLED — PAPER ONLY","warn");render()};
+$("stopBtn").onclick=()=>{s.stopped=true;s.running=false;s.mode="MANUAL";log("EMERGENCY STOP — ALL EXECUTION BLOCKED","danger");render()};
+$("upBtn").onclick=()=>place("UP","MANUAL");$("downBtn").onclick=()=>place("DOWN","MANUAL");$("exitBtn").onclick=exit;$("newBtn").onclick=newWindow;
+["bankIn","maxIn","posIn"].forEach(id=>$(id).oninput=()=>{s.bank=+$("bankIn").value||1;s.max=+$("maxIn").value||0;s.pos=+$("posIn").value||0;clamp();render()});
+setInterval(()=>{$("clock").textContent=new Date().toLocaleTimeString()},1000);
+setInterval(()=>{
+if(!s.running||s.stopped)return;
+s.last=s.btc;s.btc=Math.max(1000,s.btc+(Math.random()-.5)*45);
+if(s.side)s.pnl=(s.side==="UP"?s.btc-s.entry:s.entry-s.btc)/s.entry*s.pos;
+if(s.mode==="AUTO"&&!s.side&&s.minute>=4){
+const d=Math.abs(s.btc/s.target-1)*100;
+if(d>.18&&d<.55)place(s.btc>s.target?"UP":"DOWN","AUTO");
+}
+if(Math.random()<.08)s.minute=Math.min(15,s.minute+1);
+render();
+},1200);
+log("SYSTEM ONLINE — simulation/paper controller initialized");render();
+})();
+</script>
+</body>
+</html>
